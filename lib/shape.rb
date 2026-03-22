@@ -49,25 +49,29 @@ end
  end
 
  class Trapezoid < Polygon
-     attr_reader :base1,:base2,:side1, :side2, :height
-     def initialize(b1, b2, s1, s2, h)
-         raise ArgumentError unless Trapezoid.check_sides(b1, b2, s1, s2) and h > 0
-         @base1 = b1
-         @base2 = b2
-         @height = h
-         @side1 = s1
-         @side2 = s2
-     end
-     def area
-         (@base1 + @base2) * @height/2.0
-     end
-     def self.check_sides(a, b, c, d)
-         (d-c).abs < (b-a).abs and (b-a).abs < d + c and [a, b, c, d].all?{|e| e >= 0}
-     end
-     def perimeter
-         @base1 + @base2 + @side1 + @side2
-     end
- end
+  attr_reader :base1,:base2,:side1, :side2, :height
+  def initialize(b1, b2, s1, s2, h)
+    raise ArgumentError unless [b1, b2, s1, s2, h].all? { |arg| arg.is_a?(Numeric) && arg >= 0 }
+    @base1 = b1
+    @base2 = b2
+    @height = h
+    @side1 = s1
+    @side2 = s2
+  end
+  def area
+    if @base1 == 0 || @base2 == 0 || @height == 0
+      0.0
+    else
+      (@base1 + @base2) * @height / 2.0
+    end
+  end
+  def self.check_sides(a, b, c, d)
+    (d-c).abs < (b-a).abs and (b-a).abs < d + c and [a, b, c, d].all?{|e| e >= 0}
+  end
+  def perimeter
+    @base1 + @base2 + @side1 + @side2
+  end
+end
 
  class Triangle < Polygon
      attr_reader :a,:b,:c
