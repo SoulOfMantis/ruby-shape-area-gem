@@ -26,5 +26,5 @@
 
 ### Диаграмма наследования:
 
-<img src="./shapes\_gem\_hieararchy.png">
+<img src="./hierarchy.png">
 
