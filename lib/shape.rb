@@ -37,7 +37,7 @@ end
  class Regular_hexagon < Polygon
      attr_reader :side
      def initialize(s)
-         raise ArgumentError if side < 0
+         raise ArgumentError if s < 0
          @side = s
      end
      def area
@@ -62,7 +62,7 @@ end
          (@base1 + @base2) * @height/2.0
      end
      def self.check_sides(a, b, c, d)
-         (d-c).abs < (b-a).abs < d + c and [a, b, c, d].all?{|e| e >= 0}
+         (d-c).abs < (b-a).abs and (b-a).abs < d + c and [a, b, c, d].all?{|e| e >= 0}
      end
      def perimeter
          @base1 + @base2 + @side1 + @side2
