@@ -1,64 +1,42 @@
 require 'minitest/autorun'
-require_relative 'Shape'
+require_relative '../lib/shape_factory'
 class TestShape <Minitest::Test
     DELTA = 0.001
     def setup
-        @square = Square.new(5)
-        @rectangle = Rectangle.new(4,6)
-        @circle=Circle.new(4)
-        @tringl = Tringl.new(3,4,5)
-        @trapezoid = Trapezoid.new(3,5,2.5)
-        @paralelogram = Paralelogram.new(5,3,4)
-        @rhombus = Rhombus.new(5,4.8)
-        @ellipse= Ellipse.new(5,3)
-    end
-
-    def test_square_area
-        assert_equal(25,@square.area)
-    end
-
-    def test_rectang_area
-        assert_equal(24,@rectangle.area)
-    end
-
-    def test_circle_area
-        e = Math::PI*16
-        assert_in_delta(e,@circle.area,DELTA)
-    end
-
-    def test_triangle_area
-        assert_in_delta(6.0,@tringl.area,DELTA)
-    end
-
-    def test_trapezoid_area
-        assert_equal(10,@trapezoid.area)
-    end
-
-    def test_parallelogram_area
-        assert_equal(15,@paralelogram.area)
-    end
-
-    def test_rhombus_area
-         assert_in_delta(24.0,@rhombus.area,DELTA)
-    end
-
-    def test_ellipse_area
-        e = Math::PI*15
-        assert_in_delta(e,@ellipse.area,DELTA)
+        factory = Shape_factory.new :square
+        args = { side: 5, width: 4, height: 6, radius: 4, a: 3, b: 4, c: 5, base1: 3, base2: 7,
+                 side1: 3, side2: 5, base: 3, major: 5, minor: 3, diagonal1: 5, diagonal2: 4.8 }
+        @square = factory.create args
+        factory.change_shape :rectangle
+        @rectangle = factory.create args
+        factory.change_shape :circle
+        @circle = factory.create args
+        factory.change_shape :triangle
+        @triangle = factory.create args
+        factory.change_shape :trapezoid
+        @trapezoid = factory.create args
+        factory.change_shape :parallelogram
+        @parallelogram = factory.create args
+        factory.change_shape :rhombus
+        @rhombus = factory.create args
+        factory.change_shape :ellipse
+        @ellipse = factory.create args
+        factory.change_shape :regular_hexagon
+        @hexagon = factory.create args
     end
 
     def test_inheritance
-        assert_kind_of(Ellipse,@circle)
-         assert_kind_of(Shape,@circle)
-         assert_kind_of(Shape,@tringl)
-         assert_kind_of(Paralelogram,@rhombus)
-         assert_kind_of(Paralelogram,@rectangle)
+        assert_kind_of Shape, @ellipse
+        assert_kind_of Ellipse, @circle
+        assert_kind_of Polygon, @triangle
+        assert_kind_of Polygon, @rhombus
+        assert_kind_of Parallelogram, @rectangle
     end
 
-    def test_polimorfizm
-        shapes = [@square,@circle,@tringl,@rhombus]
+    def test_polymorphism
+        shapes = [@square, @circle, @triangle, @rhombus]
         shapes.each do |sh|
-            assert_respond_to(sh, :area)
+            assert_respond_to sh, :area
         end
     end
 end

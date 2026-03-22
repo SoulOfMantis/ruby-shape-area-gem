@@ -25,42 +25,36 @@ class TestShapeArea <Minitest::Test
     @hexagon = factory.create args
   end
 
-  def test_square_area
-    assert_equal 25, @square.area
+  def test_square_perimeter
+    assert_equal 20, @square.perimeter
   end
 
-  def test_rectangle_area
-    assert_equal 24, @rectangle.area
+  def test_rectangle_perimeter
+    assert_equal 20, @rectangle.perimeter
   end
 
-  def test_circle_area
-    e = Math::PI*16
-    assert_in_delta e, @circle.area, DELTA
+  def test_circle_circumference
+    e = Math::PI*8
+    assert_in_delta e, @circle.circumference, DELTA
   end
 
-  def test_triangle_area
-    assert_in_delta 6.0, @triangle.area, DELTA
+  def test_triangle_perimeter
+    assert_equal 12, @triangle.perimeter
   end
 
-  def test_trapezoid_area
-    assert_equal 30, @trapezoid.area
+  def test_trapezoid_perimeter
+    assert_equal 18, @trapezoid.perimeter
   end
 
-  def test_parallelogram_area
-    assert_equal 18, @parallelogram.area
+  def test_parallelogram_perimeter
+    assert_equal 16, @parallelogram.perimeter
   end
 
-  def test_rhombus_area
-    assert_in_delta 12.0, @rhombus.area, DELTA
+  def test_rhombus_perimeter
+    assert_equal 20, @rhombus.perimeter
   end
 
-  def test_ellipse_area
-    e = Math::PI*15
-    assert_in_delta e, @ellipse.area, DELTA
-  end
-
-  def test_hexagon_area
-    e = Math.sqrt(3) * 75/2
-    assert_in_delta e, @hexagon.area, DELTA
+  def test_hexagon_perimeter
+    assert_equal 30, @hexagon.area
   end
 end
