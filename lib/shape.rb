@@ -10,7 +10,7 @@ end
  class Ellipse < Shape
      attr_reader :semi_major,:semi_minor
      def initialize(major, minor)
-         raise ArgumentError if minor < 0 or major < 0
+         raise ArgumentError unless [major, minor].all? {|arg| (arg.is_a? Numeric) && arg >= 0}
          @semi_major = major
          @semi_minor = minor
      end
@@ -34,7 +34,7 @@ class Polygon < Shape
     end
 end
 
- class Regular_hexagon < Polygon
+ class RegularHexagon < Polygon
      attr_reader :side
      def initialize(s)
          raise ArgumentError if s < 0
@@ -51,7 +51,7 @@ end
  class Trapezoid < Polygon
   attr_reader :base1,:base2,:side1, :side2, :height
   def initialize(b1, b2, s1, s2, h)
-    raise ArgumentError unless [b1, b2, s1, s2, h].all? { |arg| arg.is_a?(Numeric) && arg >= 0 }
+    raise ArgumentError unless (Trapezoid.check_sides b1, b2, s1, s2) && (h.is_a? Numeric) && h >= 0
     @base1 = b1
     @base2 = b2
     @height = h
@@ -59,14 +59,10 @@ end
     @side2 = s2
   end
   def area
-    if @base1 == 0 || @base2 == 0 || @height == 0
-      0.0
-    else
-      (@base1 + @base2) * @height / 2.0
-    end
+    (@base1 + @base2) * @height / 2.0
   end
   def self.check_sides(a, b, c, d)
-    (d-c).abs < (b-a).abs and (b-a).abs < d + c and [a, b, c, d].all?{|e| e >= 0}
+    [a, b, c, d].all?{|arg| (arg.is_a? Numeric) && arg >= 0} && (d-c).abs < (b-a).abs && (b-a).abs < d + c
   end
   def perimeter
     @base1 + @base2 + @side1 + @side2
@@ -76,13 +72,13 @@ end
  class Triangle < Polygon
      attr_reader :a,:b,:c
      def initialize(a,b,c)
-         raise ArgumentError unless Triangle.check_sides(a, b, c)
+         raise ArgumentError unless Triangle.check_sides a, b, c
          @a = a
          @b = b
          @c = c
      end
      def self.check_sides(a, b, c)
-         (a <= b + c) and (b <= a + c) and (c <= a + b) and [a, b, c].all?{|e| e >= 0}
+       [a, b, c].all?{|arg| (arg.is_a? Numeric) && arg >= 0} && (a <= b + c) && (b <= a + c) && (c <= a + b)
      end
      def perimeter
          @a + @b + @c
@@ -96,7 +92,7 @@ end
  class Parallelogram < Polygon
      attr_reader :base,:height,:side
      def initialize(b, h, s)
-         raise ArgumentError if [b, h, s].any?{|e| e < 0}
+         raise ArgumentError unless [b, h, s].all?{|arg| (arg.is_a? Numeric) && arg >= 0}
          @base = b
          @height = h
          @side = s
@@ -112,7 +108,7 @@ end
  class Rhombus < Polygon
      attr_reader :diag1, :diag2, :side
      def initialize(d1, d2, a)
-         raise ArgumentError if [d1, d2, a].any?{|e| e < 0}
+         raise ArgumentError unless [d1, d2, a].all?{|arg| (arg.is_a? Numeric) && arg >= 0}
          @side = a
          @diag1 = d1
          @diag2 = d2

@@ -3,7 +3,7 @@ require_relative '../lib/shape_factory'
 class TestShape <Minitest::Test
     DELTA = 0.001
     def setup
-        factory = Shape_factory.new :square
+        factory = ShapeFactory.new :square
         args = { side: 5, width: 4, height: 6, radius: 4, a: 3, b: 4, c: 5, base1: 3, base2: 7,
                  side1: 3, side2: 5, base: 3, major: 5, minor: 3, diagonal1: 5, diagonal2: 4.8 }
         @square = factory.create args

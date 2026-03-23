@@ -1,4 +1,5 @@
-class Solid_shape
+require_relative 'shape.rb'
+class SolidShape
   def volume
     raise NotImplementedError
   end
@@ -7,10 +8,10 @@ class Solid_shape
   end
 end
 
-class Right_prism < Solid_shape
+class RightPrism < SolidShape
   attr_reader :polygon_base, :height
   def initialize(base, h)
-    raise ArgumentError unless base.is_a? Polygon and h.is_a?(Numeric) and h >= 0
+    raise ArgumentError unless (base.is_a? Polygon) && (h.is_a? Numeric) && h >= 0
     @polygon_base = base
     @height = h
   end
@@ -20,22 +21,18 @@ class Right_prism < Solid_shape
 end
 
 # Шестиугольная призма
-class Regular_hexagonal_prism < Right_prism
-  def initialize(side, h)
-    if side.is_a?(Numeric)
-      super(Regular_hexagon.new(side), h)
-    elsif side.is_a?(Regular_hexagon)
-      super(side, h)
-    else
-      raise ArgumentError
-    end
+class RegularHexagonalPrism < RightPrism
+  def initialize(base, h)
+    raise ArgumentError unless [base, h].all? {|arg|  (arg.is_a? Numeric) && arg >= 0}
+    super RegularHexagon.new(base), h
   end
 end
 
 # Сфера
-class Sphere < Solid_shape
+class Sphere < SolidShape
+  attr_reader :radius
   def initialize(r)
-    raise ArgumentError unless r.is_a?(Numeric) and r >= 0
+    raise ArgumentError unless (r.is_a? Numeric) && r >= 0
     @radius = r
   end
   def volume
@@ -43,27 +40,29 @@ class Sphere < Solid_shape
   end
 end
 
-# Куб
-class Cube < Right_prism
-  def initialize(side)
-    raise ArgumentError unless side.is_a?(Numeric) and side >= 0
-    super(Square.new(side), side)
+# Прямоугольный параллелепипед
+class RightCuboid < RightPrism
+  def initialize(w, l, h)
+    raise ArgumentError unless [w, l, h].all? { |arg|  (arg.is_a? Numeric) && arg >= 0 }
+    super Rectangle.new(w, l), h
   end
 end
 
-# Прямоугольный параллелепипед
-class Right_cuboid < Right_prism
-  def initialize(w, l, h)
-    raise ArgumentError unless [w, l, h].all? { |arg| arg.is_a?(Numeric) && arg >= 0 }
-    super(Rectangle.new(w, l), h)
+# Куб
+class Cube < RightCuboid
+  def initialize(side)
+    raise ArgumentError unless (side.is_a? Numeric) && side >= 0
+    super side, side, side
   end
 end
+
 
 # Конус
-class Cone < Solid_shape
-  def initialize(circle, h)
-    raise ArgumentError unless circle.is_a? Circle and h.is_a?(Numeric) and h >= 0
-    @base = circle
+class Cone < SolidShape
+  attr_reader :base, :height
+  def initialize(radius, h)
+    raise ArgumentError unless [radius, h].all? {|arg| (arg.is_a? Numeric) && arg >= 0}
+    @base = Circle.new radius
     @height = h
   end
   def volume
@@ -72,10 +71,10 @@ class Cone < Solid_shape
 end
 
 # Пирамида
-class Pyramid < Solid_shape
+class Pyramid < SolidShape
   attr_reader :base, :height
   def initialize(polygon, h)
-    raise ArgumentError unless polygon.is_a? Polygon and h.is_a?(Numeric) and h >= 0
+    raise ArgumentError unless (polygon.is_a? Polygon) && (h.is_a? Numeric) && h >= 0
     @base = polygon
     @height = h
   end
@@ -85,11 +84,11 @@ class Pyramid < Solid_shape
 end
 
 # Эллиптический цилиндр
-class EllipticalCylinder < Solid_shape
+class EllipticalCylinder < SolidShape
   attr_reader :base, :height
   def initialize(semi_major, semi_minor, h)
-    raise ArgumentError unless [semi_major, semi_minor, h].all? { |arg| arg.is_a?(Numeric) && arg >= 0 }
-    @base = Ellipse.new(semi_major, semi_minor)
+    raise ArgumentError unless [semi_major, semi_minor, h].all? { |arg|  (arg.is_a? Numeric) && arg >= 0 }
+    @base = Ellipse.new semi_major, semi_minor
     @height = h
   end
   def volume 
@@ -98,30 +97,31 @@ class EllipticalCylinder < Solid_shape
 end
 
 # Трапециевидная призма
-class TrapezoidalPrism < Right_prism
+class TrapezoidalPrism < RightPrism
   def initialize(base1, base2, side1, side2, base_height, prism_height)
-    raise ArgumentError unless [base1, base2, side1, side2, base_height, prism_height].all? { |arg| arg.is_a?(Numeric) && arg >= 0 }
-    super(Trapezoid.new(base1, base2, side1, side2, base_height), prism_height)
+    raise ArgumentError unless [base1, base2, side1, side2, base_height, prism_height].all? { |arg|  (arg.is_a? Numeric) && arg >= 0 }
+    super Trapezoid.new(base1, base2, side1, side2, base_height), prism_height
   end
 end
 
 
 # Ромбическая призма
-class RightRhombicPrism < Right_prism
+class RightRhombicPrism < RightPrism
   def initialize(diagonal_a, diagonal_b, height)
-    raise ArgumentError unless [diagonal_a, diagonal_b, height].all? { |arg| arg.is_a?(Numeric) && arg >= 0 }
-    side = Math.sqrt((diagonal_a/2.0)**2 + (diagonal_b/2.0)**2)
-    super(Rhombus.new(diagonal_a, diagonal_b, side), height)
+    raise ArgumentError unless [diagonal_a, diagonal_b, height].all? { |arg|  (arg.is_a? Numeric) && arg >= 0 }
+    side = Math.sqrt (diagonal_a/2.0)**2 + (diagonal_b/2.0)**2
+    super Rhombus.new(diagonal_a, diagonal_b, side), height
   end
 end
 
 # Тетраэдр
-class RegularTetrahedron < Solid_shape
+class RegularTetrahedron < Pyramid
   def initialize(side)
-    raise ArgumentError unless side.is_a?(Numeric) && side >= 0
-    @side = side
+    raise ArgumentError unless (side.is_a? Numeric) && side >= 0
+    super Triangle.new(side, side, side), side
   end
+
   def volume
-    (@side**3) / (6 * Math.sqrt(2))
+    (@height**3)/(6*Math.sqrt(2))
   end
 end

@@ -1,5 +1,5 @@
 require_relative 'shape.rb'
-class Shape_factory
+class ShapeFactory
   attr_accessor :shape
   def initialize(shape)
     change_shape shape
@@ -17,7 +17,7 @@ class Shape_factory
     when :rhombus then Rhombus.new args[:diagonal1], args[:diagonal2], args[:side]
     when :triangle then Triangle.new args[:a], args[:b], args[:c]
     when :trapezoid then Trapezoid.new args[:base1], args[:base2], args[:side1], args[:side2], args[:height]
-    when :regular_hexagon then Regular_hexagon.new args[:side]
+    when :regular_hexagon then RegularHexagon.new args[:side]
     else raise ArgumentError
     end
   end
