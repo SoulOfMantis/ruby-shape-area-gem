@@ -8,7 +8,7 @@
 end
 
  class Ellipse < Shape
-     attr_reader :semi_major,:semi_minor
+   attr_accessor :semi_major,:semi_minor
      def initialize(major, minor)
          raise ArgumentError unless [major, minor].all? {|arg| (arg.is_a? Numeric) && arg >= 0}
          @semi_major = major
@@ -35,7 +35,7 @@ class Polygon < Shape
 end
 
  class RegularHexagon < Polygon
-     attr_reader :side
+     attr_accessor :side
      def initialize(s)
          raise ArgumentError if s < 0
          @side = s
@@ -49,7 +49,7 @@ end
  end
 
  class Trapezoid < Polygon
-  attr_reader :base1,:base2,:side1, :side2, :height
+  attr_accessor :base1,:base2,:side1, :side2, :height
   def initialize(b1, b2, s1, s2, h)
     raise ArgumentError unless (Trapezoid.check_sides b1, b2, s1, s2) && (h.is_a? Numeric) && h >= 0
     @base1 = b1
@@ -70,7 +70,7 @@ end
 end
 
  class Triangle < Polygon
-     attr_reader :a,:b,:c
+     attr_accessor :a,:b,:c
      def initialize(a,b,c)
          raise ArgumentError unless Triangle.check_sides a, b, c
          @a = a
@@ -90,7 +90,7 @@ end
  end
      
  class Parallelogram < Polygon
-     attr_reader :base,:height,:side
+     attr_accessor :base,:height,:side
      def initialize(b, h, s)
          raise ArgumentError unless [b, h, s].all?{|arg| (arg.is_a? Numeric) && arg >= 0}
          @base = b
@@ -106,7 +106,7 @@ end
  end
 
  class Rhombus < Polygon
-     attr_reader :diag1, :diag2, :side
+     attr_accessor :diag1, :diag2, :side
      def initialize(d1, d2, a)
          raise ArgumentError unless [d1, d2, a].all?{|arg| (arg.is_a? Numeric) && arg >= 0}
          @side = a

@@ -18,6 +18,9 @@ class RightPrism < SolidShape
   def volume
     @polygon_base.area * @height
   end
+  def area
+    2*@polygon_base.area+@polygon_base.perimeter * @height
+  end
 end
 
 # Шестиугольная призма
@@ -37,6 +40,9 @@ class Sphere < SolidShape
   end
   def volume
     (4.0/3.0) * Math::PI * (@radius**3)
+  end
+  def area
+    4*Math::PI*@radius**2
   end
 end
 
@@ -68,6 +74,10 @@ class Cone < SolidShape
   def volume
     (@base.area * @height) / 3.0
   end
+  def area
+    l = Math.sqrt @base.semi_major**2+@height**2
+    Math::PI*@base.semi_major*l + Math::PI*@base.semi_major**2
+  end
 end
 
 # Пирамида
@@ -81,6 +91,9 @@ class Pyramid < SolidShape
   def volume 
     (@base.area * @height) / 3.0
   end
+  def area
+    raise NotImplementedError
+  end
 end
 
 # Эллиптический цилиндр
@@ -93,6 +106,14 @@ class EllipticalCylinder < SolidShape
   end
   def volume 
     @base.area * @height
+  end
+  def area
+    a = @base.semi_major
+    b = @base.semi_major
+    base_ar= 2*@base.area
+    per = Math::PI*(3*(a+b))-Math.sqrt((3*a+b)*a+3*b)
+    lateral_area = per*@height
+    base_ar+lateral_area
   end
 end
 
@@ -123,5 +144,9 @@ class RegularTetrahedron < Pyramid
 
   def volume
     (@height**3)/(6*Math.sqrt(2))
+  end
+
+  def area
+    @base.area * 4
   end
 end
