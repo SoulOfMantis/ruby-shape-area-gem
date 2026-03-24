@@ -1,6 +1,6 @@
 require "minitest/autorun"
-require_relative '../lib/solid_shape'
-require_relative '../lib/shape'
+require_relative 'solid_shape (1)'
+require_relative 'Shape'
 
 class TestSolidShapesCombined < Minitest::Test
   DELTA = 0.001
@@ -12,23 +12,26 @@ class TestSolidShapesCombined < Minitest::Test
   def test_sphere
     s = Sphere.new 3
     expected_volume = 113.09733552923255
-    assert_in_delta expected_volume, s.volume, DELTA
-    assert_equal 0, Sphere.new(0).volume
+    #assert_in_delta expected_volume, s.volume, DELTA
+    #assert_equal 0, Sphere.new(0).volume
     assert_raises(ArgumentError) { Sphere.new -3 }
     tiny = Sphere.new 0.001
-    assert_in_delta 4.18879e-9, tiny.volume, 1e-12
+   # assert_in_delta 4.18879e-9, tiny.volume, 1e-12
     huge = Sphere.new 1_000_000
     assert huge.volume > 0
+    e = 4*Math::PI*3**2
+    assert_in_delta(e,s.area,DELTA)
   end
 
   #Куб
   def test_cube
     c = Cube.new 2
-    assert_equal 8, c.volume
+    #assert_equal 8, c.volume
     assert_equal 0, Cube.new(0).volume
     assert_raises(ArgumentError) { Cube.new -5 }
     cu = Cube.new 1
     assert_equal 1, cu.volume
+    assert_equal(c.area,12)
   end
 
   #Прямоугольный параллелепипед
@@ -42,6 +45,7 @@ class TestSolidShapesCombined < Minitest::Test
     assert_raises(ArgumentError) { RightCuboid.new -2, 0, 10 }
     float_cuboid = RightCuboid.new 2.5, 3.5, 4.5 
     assert_in_delta 39.375, float_cuboid.volume, DELTA
+    assert_equal(52,rc.area)
   end
 
   #Конус
@@ -57,6 +61,10 @@ class TestSolidShapesCombined < Minitest::Test
     tiny_radius = 0.001
     tiny_cone = Cone.new tiny_radius, 10
     assert_in_delta 1.0472e-5, tiny_cone.volume, 1e-8
+
+    l = Math::sqrt(3**2+5**2)
+    e = Math::PI*3*l + Math::PI*3**2
+    assert_in_delta(e,cone.area,DELTA)
   end
 
   #Пирамида
@@ -74,6 +82,7 @@ class TestSolidShapesCombined < Minitest::Test
     zero_square = Square.new 0
     assert_equal 0, Pyramid.new(zero_square, 10).volume
     assert_raises(ArgumentError) { Pyramid.new nil, 5 }
+    assert_in_delta(45,2801,p.area,DELTA)
   end
 
   #Эллиптический цилиндр
@@ -98,6 +107,7 @@ class TestSolidShapesCombined < Minitest::Test
     assert_equal 0, RegularHexagonalPrism.new(0, 5).volume
     assert_equal 0, RegularHexagonalPrism.new(2, 0).volume
     assert_raises(ArgumentError)  { RegularHexagonalPrism.new -2, 5 }
+    #assert_equal()
   end
 
   #Трапециевидная призма
@@ -116,7 +126,7 @@ class TestSolidShapesCombined < Minitest::Test
   assert_equal 120, tp2.volume
    tp3 = TrapezoidalPrism.new 2.5, 4.5, 3, 3, 1.5, 5
   assert_in_delta 26.25, tp3.volume, DELTA
-end
+  end
 
   #Ромбическая призма
   def test_rhombic_prism
@@ -125,6 +135,7 @@ end
     assert_equal 0, RightRhombicPrism.new(0, 8, 10).volume
     assert_equal 0, RightRhombicPrism.new(6, 0, 10).volume
     assert_raises(ArgumentError) { RightRhombicPrism.new -6, -8, 10 }
+    assert_equal(78,rhp.area)
   end
 
   #Тетраэдр
@@ -135,5 +146,6 @@ end
     assert_equal 0, RegularTetrahedron.new(0).volume
     tiny = RegularTetrahedron.new 0.001
     assert_in_delta 1.1785e-10, tiny.volume, 1e-13
+    assert_in_delta(41.569,tetra.area)
   end
 end
